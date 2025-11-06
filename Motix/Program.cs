@@ -2,6 +2,7 @@ using System.Reflection;
 using Asp.Versioning;
 using Asp.Versioning.ApiExplorer;
 using Motix.Infrastructure;
+using Motix.Security;                         // ADD
 
 namespace Motix;
 
@@ -37,6 +38,8 @@ public class Program
             var xmlFile = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
             var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
             if (File.Exists(xmlPath)) c.IncludeXmlComments(xmlPath);
+
+            c.OperationFilter<ApiKeyHeaderOperationFilter>(); // ADD: mostra X-API-KEY nos métodos de escrita
         });
         builder.Services.ConfigureOptions<ConfigureSwaggerOptions>();
 
@@ -64,6 +67,8 @@ public class Program
 
         // /health (fora do Swagger — normal)
         app.MapHealthChecks("/health");
+
+        app.UseMiddleware<ApiKeyAuthMiddleware>();          // ADD: protege POST/PUT/DELETE na API versionada
 
         app.MapControllers();
         app.Run();

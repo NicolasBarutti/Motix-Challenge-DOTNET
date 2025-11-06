@@ -312,6 +312,10 @@
               "target": "Package",
               "version": "[9.0.10, )"
             },
+            "Microsoft.ML": {
+              "target": "Package",
+              "version": "[4.0.3, )"
+            },
             "Swashbuckle.AspNetCore": {
               "target": "Package",
               "version": "[9.0.6, )"

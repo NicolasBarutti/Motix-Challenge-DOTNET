@@ -11,10 +11,10 @@ public class ApiKeyAuthMiddleware
 
     public async Task InvokeAsync(HttpContext ctx, IConfiguration config)
     {
-        var path = ctx.Request.Path.Value ?? "";
+        var path = ctx.Request.Path.Value ?? string.Empty;
         var method = ctx.Request.Method.ToUpperInvariant();
 
-        // libera swagger e health
+        // libera Swagger e Health
         if (path.StartsWith("/swagger", StringComparison.OrdinalIgnoreCase) ||
             path.Equals("/health", StringComparison.OrdinalIgnoreCase))
         {
