@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "U7Dsv7VlAnw=",
+  "dgSpecHash": "BdUSyk2Pm+E=",
   "success": true,
-  "projectFilePath": "C:\\Users\\cliente\\Desktop\\Motix\\Motix.Infrastructure\\Motix.Infrastructure.csproj",
+  "projectFilePath": "C:\\Users\\cliente\\Desktop\\Motix-Challenge-DOTNET\\Motix.Infrastructure\\Motix.Infrastructure.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\cliente\\.nuget\\packages\\humanizer.core\\2.14.1\\humanizer.core.2.14.1.nupkg.sha512",
     "C:\\Users\\cliente\\.nuget\\packages\\microsoft.bcl.asyncinterfaces\\6.0.0\\microsoft.bcl.asyncinterfaces.6.0.0.nupkg.sha512",
@@ -58,9 +58,9 @@
       "code": "NU1603",
       "level": "Warning",
       "message": "Motix.Infrastructure depends on Oracle.EntityFrameworkCore (>= 8.21.310) but Oracle.EntityFrameworkCore 8.21.310 was not found. Oracle.EntityFrameworkCore 8.23.40 was resolved instead.",
-      "projectPath": "C:\\Users\\cliente\\Desktop\\Motix\\Motix.Infrastructure\\Motix.Infrastructure.csproj",
+      "projectPath": "C:\\Users\\cliente\\Desktop\\Motix-Challenge-DOTNET\\Motix.Infrastructure\\Motix.Infrastructure.csproj",
       "warningLevel": 1,
-      "filePath": "C:\\Users\\cliente\\Desktop\\Motix\\Motix.Infrastructure\\Motix.Infrastructure.csproj",
+      "filePath": "C:\\Users\\cliente\\Desktop\\Motix-Challenge-DOTNET\\Motix.Infrastructure\\Motix.Infrastructure.csproj",
       "libraryId": "Oracle.EntityFrameworkCore",
       "targetGraphs": [
         "net8.0"

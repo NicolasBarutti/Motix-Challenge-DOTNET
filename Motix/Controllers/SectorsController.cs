@@ -6,11 +6,14 @@ using Motix.Extensions;
 using Motix.Infrastructure.Persistence;
 using Motix.Models;
 using Motix.Services;
+using Asp.Versioning;
+
 
 namespace Motix.Controllers;
 
 [ApiController]
-[Route("api/[controller]")]
+[ApiVersion("1.0")]
+[Route("api/v{version:apiVersion}/[controller]")]
 public class SectorsController : ControllerBase
 {
     private readonly MotixDbContext _ctx;
@@ -47,12 +50,6 @@ public class SectorsController : ControllerBase
     }
 
     /// <summary>Cria um setor.</summary>
-    /// <remarks>Exemplo:
-    /// 
-    ///     POST /api/sectors
-    ///     { "code": "A1" }
-    /// 
-    /// </remarks>
     [HttpPost]
     [ProducesResponseType(typeof(SectorDto), StatusCodes.Status201Created)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
@@ -66,7 +63,9 @@ public class SectorsController : ControllerBase
         await _ctx.SaveChangesAsync(ct);
 
         var dto = new SectorDto(s.Id, s.Code);
-        return CreatedAtAction(nameof(GetById), new { id = s.Id }, new { data = dto, _links = LinkFactory.SectorLinks(HttpContext, s.Id) });
+        return CreatedAtAction(nameof(GetById),
+            new { version = "1.0", id = s.Id },
+            new { data = dto, _links = LinkFactory.SectorLinks(HttpContext, s.Id) });
     }
 
     /// <summary>Atualiza um setor.</summary>

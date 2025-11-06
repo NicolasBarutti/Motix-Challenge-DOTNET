@@ -9,3 +9,15 @@ C:\Users\cliente\Desktop\Motix\Motix.Domain\obj\Debug\net8.0\Motix.Domain.dll
 C:\Users\cliente\Desktop\Motix\Motix.Domain\obj\Debug\net8.0\refint\Motix.Domain.dll
 C:\Users\cliente\Desktop\Motix\Motix.Domain\obj\Debug\net8.0\Motix.Domain.pdb
 C:\Users\cliente\Desktop\Motix\Motix.Domain\obj\Debug\net8.0\ref\Motix.Domain.dll
+C:\Users\cliente\Desktop\Motix-Challenge-DOTNET\Motix.Domain\bin\Debug\net8.0\Motix.Domain.deps.json
+C:\Users\cliente\Desktop\Motix-Challenge-DOTNET\Motix.Domain\bin\Debug\net8.0\Motix.Domain.dll
+C:\Users\cliente\Desktop\Motix-Challenge-DOTNET\Motix.Domain\bin\Debug\net8.0\Motix.Domain.pdb
+C:\Users\cliente\Desktop\Motix-Challenge-DOTNET\Motix.Domain\obj\Debug\net8.0\Motix.Domain.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\cliente\Desktop\Motix-Challenge-DOTNET\Motix.Domain\obj\Debug\net8.0\Motix.Domain.AssemblyInfoInputs.cache
+C:\Users\cliente\Desktop\Motix-Challenge-DOTNET\Motix.Domain\obj\Debug\net8.0\Motix.Domain.AssemblyInfo.cs
+C:\Users\cliente\Desktop\Motix-Challenge-DOTNET\Motix.Domain\obj\Debug\net8.0\Motix.Domain.csproj.CoreCompileInputs.cache
+C:\Users\cliente\Desktop\Motix-Challenge-DOTNET\Motix.Domain\obj\Debug\net8.0\Motix.Domain.sourcelink.json
+C:\Users\cliente\Desktop\Motix-Challenge-DOTNET\Motix.Domain\obj\Debug\net8.0\Motix.Domain.dll
+C:\Users\cliente\Desktop\Motix-Challenge-DOTNET\Motix.Domain\obj\Debug\net8.0\refint\Motix.Domain.dll
+C:\Users\cliente\Desktop\Motix-Challenge-DOTNET\Motix.Domain\obj\Debug\net8.0\Motix.Domain.pdb
+C:\Users\cliente\Desktop\Motix-Challenge-DOTNET\Motix.Domain\obj\Debug\net8.0\ref\Motix.Domain.dll

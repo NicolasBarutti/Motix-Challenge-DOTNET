@@ -9,3 +9,15 @@ C:\Users\cliente\Desktop\Motix\Motix.Tests\obj\Debug\net8.0\Motix.Tests.dll
 C:\Users\cliente\Desktop\Motix\Motix.Tests\obj\Debug\net8.0\refint\Motix.Tests.dll
 C:\Users\cliente\Desktop\Motix\Motix.Tests\obj\Debug\net8.0\Motix.Tests.pdb
 C:\Users\cliente\Desktop\Motix\Motix.Tests\obj\Debug\net8.0\ref\Motix.Tests.dll
+C:\Users\cliente\Desktop\Motix-Challenge-DOTNET\Motix.Tests\bin\Debug\net8.0\Motix.Tests.deps.json
+C:\Users\cliente\Desktop\Motix-Challenge-DOTNET\Motix.Tests\bin\Debug\net8.0\Motix.Tests.dll
+C:\Users\cliente\Desktop\Motix-Challenge-DOTNET\Motix.Tests\bin\Debug\net8.0\Motix.Tests.pdb
+C:\Users\cliente\Desktop\Motix-Challenge-DOTNET\Motix.Tests\obj\Debug\net8.0\Motix.Tests.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\cliente\Desktop\Motix-Challenge-DOTNET\Motix.Tests\obj\Debug\net8.0\Motix.Tests.AssemblyInfoInputs.cache
+C:\Users\cliente\Desktop\Motix-Challenge-DOTNET\Motix.Tests\obj\Debug\net8.0\Motix.Tests.AssemblyInfo.cs
+C:\Users\cliente\Desktop\Motix-Challenge-DOTNET\Motix.Tests\obj\Debug\net8.0\Motix.Tests.csproj.CoreCompileInputs.cache
+C:\Users\cliente\Desktop\Motix-Challenge-DOTNET\Motix.Tests\obj\Debug\net8.0\Motix.Tests.sourcelink.json
+C:\Users\cliente\Desktop\Motix-Challenge-DOTNET\Motix.Tests\obj\Debug\net8.0\Motix.Tests.dll
+C:\Users\cliente\Desktop\Motix-Challenge-DOTNET\Motix.Tests\obj\Debug\net8.0\refint\Motix.Tests.dll
+C:\Users\cliente\Desktop\Motix-Challenge-DOTNET\Motix.Tests\obj\Debug\net8.0\Motix.Tests.pdb
+C:\Users\cliente\Desktop\Motix-Challenge-DOTNET\Motix.Tests\obj\Debug\net8.0\ref\Motix.Tests.dll

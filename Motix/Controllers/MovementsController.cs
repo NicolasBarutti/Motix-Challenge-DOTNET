@@ -6,17 +6,19 @@ using Motix.Extensions;
 using Motix.Infrastructure.Persistence;
 using Motix.Models;
 using Motix.Services;
+using Asp.Versioning;
+
 
 namespace Motix.Controllers;
 
 [ApiController]
-[Route("api/[controller]")]
+[ApiVersion("1.0")]
+[Route("api/v{version:apiVersion}/[controller]")]
 public class MovementsController : ControllerBase
 {
     private readonly MotixDbContext _ctx;
     public MovementsController(MotixDbContext ctx) => _ctx = ctx;
 
-    /// <summary>Lista movimentos com paginação.</summary>
     [HttpGet]
     [ProducesResponseType(typeof(PagedResult<object>), StatusCodes.Status200OK)]
     public async Task<IActionResult> Get([FromQuery] int page = 1, [FromQuery] int pageSize = 10, CancellationToken ct = default)
@@ -35,7 +37,6 @@ public class MovementsController : ControllerBase
         return Ok(new PagedResult<object>(items, paged.Page, paged.PageSize, paged.TotalCount));
     }
 
-    /// <summary>Obtém um movimento por ID.</summary>
     [HttpGet("{id:guid}")]
     [ProducesResponseType(typeof(MovementDto), StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
@@ -51,13 +52,6 @@ public class MovementsController : ControllerBase
         });
     }
 
-    /// <summary>Cria um movimento (moto foi para setor).</summary>
-    /// <remarks>Exemplo:
-    /// 
-    ///     POST /api/movements
-    ///     { "motorcycleId": "GUID_MOTO", "sectorId": "GUID_SETOR" }
-    /// 
-    /// </remarks>
     [HttpPost]
     [ProducesResponseType(typeof(MovementDto), StatusCodes.Status201Created)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
@@ -85,11 +79,11 @@ public class MovementsController : ControllerBase
         }
 
         var dto = new MovementDto(mv.Id, mv.MotorcycleId, mv.SectorId, mv.OccurredAt);
-        return CreatedAtAction(nameof(GetById), new { id = mv.Id },
+        return CreatedAtAction(nameof(GetById),
+            new { version = "1.0", id = mv.Id },
             new { data = dto, _links = LinkFactory.MovementLinks(HttpContext, mv.Id) });
     }
 
-    /// <summary>Remove um movimento.</summary>
     [HttpDelete("{id:guid}")]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]

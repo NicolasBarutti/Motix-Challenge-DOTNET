@@ -1,4 +1,6 @@
 using System.Reflection;
+using Asp.Versioning;
+using Asp.Versioning.ApiExplorer;
 using Motix.Infrastructure;
 
 namespace Motix;
@@ -10,22 +12,38 @@ public class Program
         var builder = WebApplication.CreateBuilder(args);
 
         builder.Services.AddControllers();
+
+        // Versionamento + Explorer (Swagger agrupa por versão)
+        builder.Services
+            .AddApiVersioning(o =>
+            {
+                o.DefaultApiVersion = new ApiVersion(1, 0);
+                o.AssumeDefaultVersionWhenUnspecified = true;
+                o.ReportApiVersions = true; // header api-supported-versions
+                o.ApiVersionReader = ApiVersionReader.Combine(
+                    new UrlSegmentApiVersionReader() // /api/v{version}/...
+                );
+            })
+            .AddApiExplorer(o =>
+            {
+                o.GroupNameFormat = "'v'VVV"; // v1, v2, v2.1
+                o.SubstituteApiVersionInUrl = true;
+            });
+
+        // Swagger (um doc por versão)
         builder.Services.AddEndpointsApiExplorer();
         builder.Services.AddSwaggerGen(c =>
         {
-            c.SwaggerDoc("v1", new Microsoft.OpenApi.Models.OpenApiInfo
-            {
-                Title = "Motix API",
-                Version = "v1",
-                Description = "API com Setores, Motos e Movimentos. CRUD + paginação + HATEOAS."
-            });
-
-            // LÊ o arquivo XML gerado pelo csproj (XML comments)
             var xmlFile = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
             var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
             if (File.Exists(xmlPath)) c.IncludeXmlComments(xmlPath);
         });
+        builder.Services.ConfigureOptions<ConfigureSwaggerOptions>();
 
+        // HealthChecks
+        builder.Services.AddHealthChecks();
+
+        // Infra
         builder.Services.AddDBContext(builder.Configuration);
         builder.Services.AddRepositories();
 
@@ -34,10 +52,19 @@ public class Program
         if (app.Environment.IsDevelopment())
         {
             app.UseSwagger();
-            app.UseSwaggerUI();
+            var provider = app.Services.GetRequiredService<IApiVersionDescriptionProvider>();
+            app.UseSwaggerUI(c =>
+            {
+                foreach (var desc in provider.ApiVersionDescriptions)
+                    c.SwaggerEndpoint($"/swagger/{desc.GroupName}/swagger.json", $"Motix {desc.GroupName}");
+            });
         }
 
         app.UseHttpsRedirection();
+
+        // /health (fora do Swagger — normal)
+        app.MapHealthChecks("/health");
+
         app.MapControllers();
         app.Run();
     }

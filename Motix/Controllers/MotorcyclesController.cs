@@ -6,11 +6,13 @@ using Motix.Extensions;
 using Motix.Infrastructure.Persistence;
 using Motix.Models;
 using Motix.Services;
+using Asp.Versioning;
 
 namespace Motix.Controllers;
 
 [ApiController]
-[Route("api/[controller]")]
+[ApiVersion("1.0")]
+[Route("api/v{version:apiVersion}/[controller]")]
 public class MotorcyclesController : ControllerBase
 {
     private readonly MotixDbContext _ctx;
@@ -48,10 +50,10 @@ public class MotorcyclesController : ControllerBase
 
     /// <summary>Cria uma moto.</summary>
     /// <remarks>Exemplo:
-    /// 
-    ///     POST /api/motorcycles
+    ///
+    ///     POST /api/v1/motorcycles
     ///     { "plate": "ABC1D23", "sectorId": "GUID_DO_SETOR" }
-    /// 
+    ///
     /// </remarks>
     [HttpPost]
     [ProducesResponseType(typeof(MotorcycleDto), StatusCodes.Status201Created)]
@@ -61,10 +63,13 @@ public class MotorcyclesController : ControllerBase
         if (input.SectorId == Guid.Empty)
             return BadRequest(new { error = "SectorId é obrigatório" });
 
+        if (string.IsNullOrWhiteSpace(input.Plate))
+            return BadRequest(new { error = "Plate é obrigatória" });
+
         var m = new Motorcycle
         {
             Id = Guid.NewGuid(),
-            Plate = input.Plate,
+            Plate = input.Plate.Trim().ToUpperInvariant(),
             SectorId = input.SectorId
         };
 
@@ -80,7 +85,10 @@ public class MotorcyclesController : ControllerBase
         }
 
         var dto = new MotorcycleDto(m.Id, m.Plate, m.SectorId);
-        return CreatedAtAction(nameof(GetById), new { id = m.Id }, new { data = dto, _links = LinkFactory.MotorcycleLinks(HttpContext, m.Id) });
+        // 🔧 inclui a versão na rota de retorno
+        return CreatedAtAction(nameof(GetById),
+            new { version = "1.0", id = m.Id },
+            new { data = dto, _links = LinkFactory.MotorcycleLinks(HttpContext, m.Id) });
     }
 
     /// <summary>Atualiza uma moto.</summary>
@@ -93,7 +101,8 @@ public class MotorcyclesController : ControllerBase
         var m = await _ctx.Motorcycles.FindAsync(new object?[] { id }, ct);
         if (m is null) return NotFound();
 
-        m.Plate = input.Plate;
+        if (!string.IsNullOrWhiteSpace(input.Plate))
+            m.Plate = input.Plate.Trim().ToUpperInvariant();
 
         if (input.SectorId != Guid.Empty)
             m.SectorId = input.SectorId;
