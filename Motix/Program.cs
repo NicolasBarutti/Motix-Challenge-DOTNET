@@ -2,7 +2,7 @@ using System.Reflection;
 using Asp.Versioning;
 using Asp.Versioning.ApiExplorer;
 using Motix.Infrastructure;
-using Motix.Security;                         // ADD
+using Motix.Security;
 
 namespace Motix;
 
@@ -14,13 +14,13 @@ public class Program
 
         builder.Services.AddControllers();
 
-        // Versionamento + Explorer (Swagger agrupa por versão)
+        // 🔢 Versionamento de API
         builder.Services
             .AddApiVersioning(o =>
             {
                 o.DefaultApiVersion = new ApiVersion(1, 0);
                 o.AssumeDefaultVersionWhenUnspecified = true;
-                o.ReportApiVersions = true; // header api-supported-versions
+                o.ReportApiVersions = true;
                 o.ApiVersionReader = ApiVersionReader.Combine(
                     new UrlSegmentApiVersionReader() // /api/v{version}/...
                 );
@@ -31,22 +31,25 @@ public class Program
                 o.SubstituteApiVersionInUrl = true;
             });
 
-        // Swagger (um doc por versão)
+        // 📘 Swagger (docs por versão via ConfigureSwaggerOptions)
         builder.Services.AddEndpointsApiExplorer();
         builder.Services.AddSwaggerGen(c =>
         {
+            // XML comments (se existir)
             var xmlFile = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
             var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
-            if (File.Exists(xmlPath)) c.IncludeXmlComments(xmlPath);
+            if (File.Exists(xmlPath))
+                c.IncludeXmlComments(xmlPath);
 
-            c.OperationFilter<ApiKeyHeaderOperationFilter>(); // ADD: mostra X-API-KEY nos métodos de escrita
+            // mostra campo X-API-KEY nos métodos de escrita
+            c.OperationFilter<ApiKeyHeaderOperationFilter>();
         });
-        builder.Services.ConfigureOptions<ConfigureSwaggerOptions>();
+        builder.Services.ConfigureOptions<ConfigureSwaggerOptions>(); // gera v1, v2... dinamicamente
 
-        // HealthChecks
+        // ❤️ HealthChecks
         builder.Services.AddHealthChecks();
 
-        // Infra
+        // 🧱 Infra (DB + Repositórios)
         builder.Services.AddDBContext(builder.Configuration);
         builder.Services.AddRepositories();
 
@@ -65,12 +68,15 @@ public class Program
 
         app.UseHttpsRedirection();
 
-        // /health (fora do Swagger — normal)
+        // /health público
         app.MapHealthChecks("/health");
 
-        app.UseMiddleware<ApiKeyAuthMiddleware>();          // ADD: protege POST/PUT/DELETE na API versionada
+        // 🔐 Segurança (API Key)
+        app.UseMiddleware<ApiKeyAuthMiddleware>();
 
+        // Controllers
         app.MapControllers();
+
         app.Run();
     }
 }

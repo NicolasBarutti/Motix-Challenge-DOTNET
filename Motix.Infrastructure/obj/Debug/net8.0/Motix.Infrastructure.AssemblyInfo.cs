@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("Motix.Infrastructure")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+64be03c695761ab38fce448d77d9bc0a9da1db3e")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+babffa4135f949c27293e061d39f45b9dec9f275")]
 [assembly: System.Reflection.AssemblyProductAttribute("Motix.Infrastructure")]
 [assembly: System.Reflection.AssemblyTitleAttribute("Motix.Infrastructure")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
