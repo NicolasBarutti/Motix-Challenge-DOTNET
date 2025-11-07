@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Asp.Versioning;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Motix.Application.DTOs;
 using Motix.Domain.Entities;
@@ -6,7 +7,6 @@ using Motix.Extensions;
 using Motix.Infrastructure.Persistence;
 using Motix.Models;
 using Motix.Services;
-using Asp.Versioning;
 
 namespace Motix.Controllers;
 
@@ -49,12 +49,6 @@ public class MotorcyclesController : ControllerBase
     }
 
     /// <summary>Cria uma moto.</summary>
-    /// <remarks>Exemplo:
-    ///
-    ///     POST /api/v1/motorcycles
-    ///     { "plate": "ABC1D23", "sectorId": "GUID_DO_SETOR" }
-    ///
-    /// </remarks>
     [HttpPost]
     [ProducesResponseType(typeof(MotorcycleDto), StatusCodes.Status201Created)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
@@ -63,32 +57,26 @@ public class MotorcyclesController : ControllerBase
         if (input.SectorId == Guid.Empty)
             return BadRequest(new { error = "SectorId é obrigatório" });
 
+        // ✅ valida FK explicitamente (necessário para EF InMemory e comportamento REST)
+        var sectorExists = await _ctx.Sectors.AsNoTracking().AnyAsync(s => s.Id == input.SectorId, ct);
+        if (!sectorExists)
+            return BadRequest(new { error = "SectorId inexistente (violação de FK)" });
+
         if (string.IsNullOrWhiteSpace(input.Plate))
-            return BadRequest(new { error = "Plate é obrigatória" });
+            return BadRequest(new { error = "Plate é obrigatório" });
 
         var m = new Motorcycle
         {
             Id = Guid.NewGuid(),
-            Plate = input.Plate.Trim().ToUpperInvariant(),
+            Plate = input.Plate.Trim(),
             SectorId = input.SectorId
         };
 
-        try
-        {
-            _ctx.Motorcycles.Add(m);
-            await _ctx.SaveChangesAsync(ct);
-        }
-        catch (DbUpdateException ex) when (ex.InnerException?.Message.Contains("ORA-02291") == true)
-        {
-            // FK inválida (Setor não existe)
-            return BadRequest(new { error = "SectorId inexistente (violação de FK)" });
-        }
+        _ctx.Motorcycles.Add(m);
+        await _ctx.SaveChangesAsync(ct);
 
         var dto = new MotorcycleDto(m.Id, m.Plate, m.SectorId);
-        // 🔧 inclui a versão na rota de retorno
-        return CreatedAtAction(nameof(GetById),
-            new { version = "1.0", id = m.Id },
-            new { data = dto, _links = LinkFactory.MotorcycleLinks(HttpContext, m.Id) });
+        return CreatedAtAction(nameof(GetById), new { id = m.Id }, new { data = dto, _links = LinkFactory.MotorcycleLinks(HttpContext, m.Id) });
     }
 
     /// <summary>Atualiza uma moto.</summary>
@@ -102,20 +90,18 @@ public class MotorcyclesController : ControllerBase
         if (m is null) return NotFound();
 
         if (!string.IsNullOrWhiteSpace(input.Plate))
-            m.Plate = input.Plate.Trim().ToUpperInvariant();
+            m.Plate = input.Plate.Trim();
 
         if (input.SectorId != Guid.Empty)
+        {
+            var sectorExists = await _ctx.Sectors.AsNoTracking().AnyAsync(s => s.Id == input.SectorId, ct);
+            if (!sectorExists)
+                return BadRequest(new { error = "SectorId inexistente (violação de FK)" });
+
             m.SectorId = input.SectorId;
-
-        try
-        {
-            await _ctx.SaveChangesAsync(ct);
-        }
-        catch (DbUpdateException ex) when (ex.InnerException?.Message.Contains("ORA-02291") == true)
-        {
-            return BadRequest(new { error = "SectorId inexistente (violação de FK)" });
         }
 
+        await _ctx.SaveChangesAsync(ct);
         return NoContent();
     }
 
@@ -125,10 +111,10 @@ public class MotorcyclesController : ControllerBase
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     public async Task<IActionResult> Delete(Guid id, CancellationToken ct = default)
     {
-        var m = await _ctx.Motorcycles.FindAsync(new object?[] { id }, ct);
-        if (m is null) return NotFound();
+        var exists = await _ctx.Motorcycles.AsNoTracking().AnyAsync(x => x.Id == id, ct);
+        if (!exists) return NotFound();
 
-        _ctx.Motorcycles.Remove(m);
+        _ctx.Motorcycles.Remove(new Motorcycle { Id = id });
         await _ctx.SaveChangesAsync(ct);
         return NoContent();
     }

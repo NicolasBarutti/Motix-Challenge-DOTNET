@@ -3,6 +3,7 @@ using Asp.Versioning;
 using Asp.Versioning.ApiExplorer;
 using Motix.Infrastructure;
 using Motix.Security;
+using Motix.Services; // ADD para ML.NET
 
 namespace Motix;
 
@@ -12,9 +13,10 @@ public class Program
     {
         var builder = WebApplication.CreateBuilder(args);
 
+        // 🚀 Controllers
         builder.Services.AddControllers();
 
-        // 🔢 Versionamento de API
+        // 🔢 Versionamento da API
         builder.Services
             .AddApiVersioning(o =>
             {
@@ -31,7 +33,7 @@ public class Program
                 o.SubstituteApiVersionInUrl = true;
             });
 
-        // 📘 Swagger (docs por versão via ConfigureSwaggerOptions)
+        // 📘 Swagger (gera doc por versão)
         builder.Services.AddEndpointsApiExplorer();
         builder.Services.AddSwaggerGen(c =>
         {
@@ -41,10 +43,11 @@ public class Program
             if (File.Exists(xmlPath))
                 c.IncludeXmlComments(xmlPath);
 
-            // mostra campo X-API-KEY nos métodos de escrita
+            // Mostra campo X-API-KEY no Swagger para endpoints protegidos
             c.OperationFilter<ApiKeyHeaderOperationFilter>();
         });
-        builder.Services.ConfigureOptions<ConfigureSwaggerOptions>(); // gera v1, v2... dinamicamente
+
+        builder.Services.ConfigureOptions<ConfigureSwaggerOptions>();
 
         // ❤️ HealthChecks
         builder.Services.AddHealthChecks();
@@ -53,8 +56,12 @@ public class Program
         builder.Services.AddDBContext(builder.Configuration);
         builder.Services.AddRepositories();
 
+        // 🧠 ML.NET (serviço de previsão)
+        builder.Services.AddScoped<IMlPredictionService, MlPredictionService>();
+
         var app = builder.Build();
 
+        // 🧭 Swagger e versão dinâmica
         if (app.Environment.IsDevelopment())
         {
             app.UseSwagger();
@@ -66,17 +73,19 @@ public class Program
             });
         }
 
+        // 🔒 HTTPS
         app.UseHttpsRedirection();
 
-        // /health público
+        // ❤️ Health (endpoint público)
         app.MapHealthChecks("/health");
 
-        // 🔐 Segurança (API Key)
+        // 🔐 Middleware de segurança (API KEY)
         app.UseMiddleware<ApiKeyAuthMiddleware>();
 
-        // Controllers
+        // 🚀 Controllers
         app.MapControllers();
 
+        // 🏁 Executa
         app.Run();
     }
 }

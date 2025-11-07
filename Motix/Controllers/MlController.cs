@@ -13,7 +13,16 @@ public class MlController : ControllerBase
     private readonly IMlPredictionService _ml;
     public MlController(IMlPredictionService ml) => _ml = ml;
 
-    /// <summary>Prediz se uma moto deve se mover (modelo simples ML.NET).</summary>
+    /// <summary>Prediz se uma moto deveria se mover (modelo simples com ML.NET).</summary>
+    /// <remarks>
+    /// POST /api/v1/ml/predict
+    /// Body:
+    /// {
+    ///   "movementsCount": 6,
+    ///   "sectorChangesLast7Days": 2,
+    ///   "hoursSinceLastMove": 8
+    /// }
+    /// </remarks>
     [HttpPost("predict")]
     [ProducesResponseType(typeof(MovementPredictionDto), StatusCodes.Status200OK)]
     public IActionResult Predict([FromBody] MovementFeaturesDto input)
