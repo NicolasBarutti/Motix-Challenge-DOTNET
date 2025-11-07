@@ -182,10 +182,4 @@ dotnet test
 - **IDs Guid (RAW 16)** → consultas devem usar `hextoraw(replace(...))`.  
 - **ORA-02291 (FK inválida)** → tratado como **400 Bad Request**.  
 
----
 
-## 📹 Entregáveis GS
-- [ ] Código no GitHub + README  
-- [ ] Swagger documentado  
-- [ ] Vídeo demonstração (máx. 8 min)  
-- [ ] Vídeo Pitch (máx. 3 min)  
